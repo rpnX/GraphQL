@@ -1,31 +1,30 @@
 import { GraphQLServer } from 'graphql-yoga'
+import axios from 'axios'
 
 const server = new GraphQLServer({
     typeDefs:`
         type Query {
-            id :ID
-            name: String
+            agent(id:ID!): User!
+            agents: [User!]!
+            
+        },
+        type User {
+            id: ID!
+            name: String!
             age: Int
-            married: Boolean
+            married: Boolean!
             average: Float
         }
     `,
     resolvers:{
         Query: {
-            id(){
-                return 1
+            agents: async() => { 
+                const response  = await axios.get('http://localhost:3004/users')
+                return response.data
             },
-            name(){
-                return"John"
-            },
-            age(){
-                return 50
-            },
-            married(){
-                return true
-            },
-            average(){
-                return 3.5
+            agent: async(rest,args) => {
+                const response  = await axios.get(`http://localhost:3004/users/${args.id}`)
+                return response.data
             }
         }
     }
@@ -34,6 +33,6 @@ const server = new GraphQLServer({
 
 server.start(
     ()=>{
-        console.log("run run")
+        console.log("Server Start")
     }
 )
