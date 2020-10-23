@@ -1,11 +1,14 @@
 import { GraphQLServer } from 'graphql-yoga'
 import axios from 'axios'
 
+const API = "http://localhost:3004/"
+
 const server = new GraphQLServer({
     typeDefs:`
         type Query {
-            agent(id:ID!): User!
-            agents: [User!]!
+            user(id:ID!): User!
+            users(name:String,age:Int): [User!]!
+            msg(values:[String!]!): String!
             
         },
         type User {
@@ -18,13 +21,23 @@ const server = new GraphQLServer({
     `,
     resolvers:{
         Query: {
-            agents: async() => { 
-                const response  = await axios.get('http://localhost:3004/users')
+            users: async(parent,args,context,info) => { 
+
+                const name = args.name != null ? `name=${args.name}` : ''
+                const age = args.age != null ? `age=${args.age}` : ''
+
+                const response  = await axios.get(`${API}users?${name}&${age}`)
                 return response.data
             },
-            agent: async(rest,args) => {
-                const response  = await axios.get(`http://localhost:3004/users/${args.id}`)
+            user: async(parent,args,context,info) => {
+                const response  = await axios.get(`${API}users/${args.id}`)
                 return response.data
+            },
+            msg: (parent,args,context,info) => {
+                if (args.values.length === 0){
+                    return("Wrong values")
+                }
+                return (`Hello my friend, yuo say: ${args.values[0]} and ${args.values[1]}` )
             }
         }
     }
