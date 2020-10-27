@@ -9,6 +9,8 @@ const server = new GraphQLServer({
             user(id:ID!): User!
             users(name:String,age:Int): [User!]!
             msg(values:[String!]!): String!
+add             posts: [Post!]!
+            post(id: ID!): Post!
             
         },
         type User {
@@ -17,6 +19,13 @@ const server = new GraphQLServer({
             age: Int
             married: Boolean!
             average: Float
+            posts: [Post!]!
+        },
+        type Post {
+            id: ID!
+            title: String!
+            content: String!
+            author: User!
         }
     `,
     resolvers:{
@@ -38,14 +47,30 @@ const server = new GraphQLServer({
                     return("Wrong values")
                 }
                 return (`Hello my friend, yuo say: ${args.values[0]} and ${args.values[1]}` )
+            },
+            posts: async(parent,args,context,info) => {
+                const response  = await axios.get(`${API}posts`)
+                return response.data
+            }
+        },
+        Post:{
+            author: async(parent,args,context,info) => {
+                const response  = await axios.get(`${API}users/${parent.author}`)
+                return response.data
+            }
+        },
+        User:{
+            posts:  async(parent,args,context,info) => {
+                const response  = await axios.get(`${API}posts?author=${parent.id}`)
+                return response.data
             }
         }
+
     }
 
 })
 
-server.start(
-    ()=>{
+server.start(()=>{
         console.log("Server Start")
     }
 )
