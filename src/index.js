@@ -9,7 +9,7 @@ const server = new GraphQLServer({
             user(id:ID!): User!
             users(name:String,age:Int): [User!]!
             msg(values:[String!]!): String!
-add             posts: [Post!]!
+            posts: [Post!]!
             post(id: ID!): Post!
             
         },
