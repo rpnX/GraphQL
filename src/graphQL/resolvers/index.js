@@ -29,6 +29,39 @@ const Query = {
         return response.data
     },
 }
+
+const Post = {
+    author: async(parent,args,context,info) => {
+        const response  = await axios.get(`${API}/users/${parent.author}`)
+        return response.data
+    },
+    picture: async(parent,args,context,info) => {
+        const response  = await axios.get(`${API}/pictures/${parent.picture}`)
+        return response.data
+    }
+}
+
+const User = {
+    posts: async(parent,args,context,info) => {
+        const response  = await axios.get(`${API}/posts?author=${parent.id}`)
+        return response.data
+    },
+    pictures: async(parent,args,context,info) => {
+        const response  = await axios.get(`${API}/pictures?author=${parent.id}`)
+        return response.data
+    }
+}
+
+const Picture = {
+    author: async(parent,args,context,info) => {
+        const response  = await axios.get(`${API}/users/${parent.author}`)
+        return response.data
+    },
+    post: async(parent,args,context,info) => {
+        const response  = await axios.get(`${API}/post/${parent.post}`)
+        return response.data
+    }
+}
 export {
-    Query
+    Query, Post, User, Picture
 }
