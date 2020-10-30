@@ -1,10 +1,11 @@
 import { GraphQLServer } from 'graphql-yoga'
-import { Query, Post, User, Picture } from './graphQL/resolvers/index'
+import { Query, Mutation, Post, User, Picture } from './graphQL/resolvers/index'
 
 const server = new GraphQLServer({
     typeDefs:'./src/graphQL/schema.graphql',
     resolvers:{
         Query,
+        Mutation,
         Post,
         User,
         Picture

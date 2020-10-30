@@ -30,6 +30,31 @@ const Query = {
     },
 }
 
+const Mutation = {
+    createUser: async(parent,args,context,info) => {
+        const response  = await axios.post(`${API}/users`,{
+            name: args.name,
+            age: args.age,
+            maried: args.maried
+        })
+        return response.data
+    },
+    createPost: async(parent,args,context,info) => {
+        const response  = await axios.post(`${API}/posts`,{
+            title: args.title,
+            content: args.content,
+        })
+        return response.data
+    },
+    delelePost: async(parent,args,context,info) => {
+        const response  = await axios.delete(`${API}/posts/${args.id}`)
+        if(Object.keys(response.data).length === 0){
+            return true
+        }
+        return false
+    },
+}
+
 const Post = {
     author: async(parent,args,context,info) => {
         const response  = await axios.get(`${API}/users/${parent.author}`)
@@ -63,5 +88,9 @@ const Picture = {
     }
 }
 export {
-    Query, Post, User, Picture
+    Query,
+    Mutation,
+    Post,
+    User,
+    Picture
 }

@@ -7,6 +7,12 @@ type Query {
     pictures: [Picture!]!            
 },
 
+type Mutation {
+    createUser(name: String!, age: Int!, married: Boolean!): User!
+    createPost(title: String!, content: String!):Post!
+    delelePost(id: ID!): Boolean!
+}
+
 type Picture {
     id: ID!
     path: String!
